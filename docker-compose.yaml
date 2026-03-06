@@ -18,12 +18,14 @@ services:
 
   flask-app:
     build: .
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - REDIS_HOST=${REDIS_HOST}
+    # environment:
+    #   - POSTGRES_HOST=${POSTGRES_HOST}
+    #   - POSTGRES_DB=${POSTGRES_DB}
+    #   - POSTGRES_USER=${POSTGRES_USER}
+    #   - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    #   - REDIS_HOST=${REDIS_HOST}
+    env_file:
+      - .env
     networks:
       - flask_network
     depends_on:
@@ -56,17 +58,17 @@ services:
       resources:
         limits:
           memory: 512M
-
   redis:
     image: redis:7-alpine
-    command: [ "redis-server", "--port", "${REDIS_PORT}", "--appendonly", "yes" ]
-    healthcheck:
-      test: [ "CMD", "redis-cli", "-p", "${REDIS_PORT}", "ping" ]
-      interval: 5s
     volumes:
       - redis_data:/data
     networks:
       - flask_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
 networks:
