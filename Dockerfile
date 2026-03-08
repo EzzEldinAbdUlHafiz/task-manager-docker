@@ -1,6 +1,5 @@
 FROM python:3.12-alpine AS builder
 WORKDIR /build
-RUN apk add --no-cache gcc musl-dev postgresql-dev python3-dev
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
@@ -25,6 +24,6 @@ USER flaskuser
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8000/api/health || exit 1
+    CMD wget -qO- http://localhost:8000/api/health || exit 1
 
-CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "flask_app:app" ]
+CMD [ "gunicorn", "-w", "2", "-b", "0.0.0.0:8000", "flask_app:app" ]

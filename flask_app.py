@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, render_template_string
 import os, datetime, json
 import psycopg2
 import redis as redis_lib
+import socket  # Add this at the top
 
 app = Flask(__name__)
 
@@ -75,7 +76,8 @@ def index():
     try: r=get_redis(); r.ping(); redis_ok=True
     except: pass
     return render_template_string(HTML,
-        worker=os.environ.get("SERVER_NAME","flask"),
+        # worker=os.environ.get("SERVER_NAME","flask"),
+        worker = socket.gethostname(),
         time=datetime.datetime.now().strftime("%H:%M:%S"),
         db_ok=db_ok, redis_ok=redis_ok)
 
