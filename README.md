@@ -77,3 +77,5 @@ The application will be available at:
 - **Rate Limiting**: Nginx limits API requests to 20 per second.
 - **Non-Root User**: The Flask application runs as a restricted user inside the container.
 - **Security Headers**: Includes `X-Frame-Options` and `X-Content-Type-Options`.
+
+!["Task Manager Dockerized"](img/1.png)
