@@ -1,5 +1,7 @@
 # Task Manager Dockerized
 
+!["Task Manager Dockerized"](img/1.png)
+
 A robust, containerized Task Management application built with **Flask**, **PostgreSQL**, **Redis**, and **Nginx**. This project demonstrates a production-ready Docker architecture with multi-stage builds, health checks, and secure reverse proxying.
 
 ## 🚀 Architecture Overview
@@ -77,5 +79,3 @@ The application will be available at:
 - **Rate Limiting**: Nginx limits API requests to 20 per second.
 - **Non-Root User**: The Flask application runs as a restricted user inside the container.
 - **Security Headers**: Includes `X-Frame-Options` and `X-Content-Type-Options`.
-
-!["Task Manager Dockerized"](img/1.png)
