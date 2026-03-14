@@ -5,14 +5,12 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 FROM python:3.12-alpine AS runtime
 
-RUN apk add --no-cache libpq wget
-
-RUN addgroup -S flaskgroup
-RUN adduser -S flaskuser -G flaskgroup
+# libpq = helps Python talk to PostgreSQL
+RUN apk add --no-cache libpq wget && \ 
+    addgroup -S flaskgroup && \
+    adduser -S flaskuser -G flaskgroup
 
 WORKDIR /app
-
-ENV PATH="/usr/local/bin:${PATH}"
 
 COPY --from=builder /install/ /usr/local/
 COPY . .
@@ -23,7 +21,7 @@ USER flaskuser
 
 EXPOSE 8000
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=5 \
     CMD wget -qO- http://localhost:8000/api/health || exit 1
 
-CMD [ "gunicorn", "-w", "2", "-b", "0.0.0.0:8000", "flask_app:app" ]
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:8000", "flask_app:app"]

@@ -18,14 +18,12 @@ services:
 
   flask-app:
     build: .
-    # environment:
-    #   - POSTGRES_HOST=${POSTGRES_HOST}
-    #   - POSTGRES_DB=${POSTGRES_DB}
-    #   - POSTGRES_USER=${POSTGRES_USER}
-    #   - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    #   - REDIS_HOST=${REDIS_HOST}
-    env_file:
-      - .env
+    environment:
+      NGINX_HTTP: ${NGINX_HTTP}
+      NGINX_HTTPS: ${NGINX_HTTPS}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     networks:
       - flask_network
     depends_on:
@@ -35,10 +33,11 @@ services:
         condition: service_healthy
     restart: unless-stopped
     deploy:
+      replicas: 3
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
+          memory: 512M
   postgres:
     image: postgres:16-alpine
     environment:
